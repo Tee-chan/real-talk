@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "references": [
+    { "path": "./packages/types" },
+    { "path": "./packages/database" },
+    { "path": "./packages/tsconfig" },
+    { "path": "./apps/api" },
+    { "path": "./apps/web" }
+  ],
+  "files": []
+}

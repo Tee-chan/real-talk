@@ -1,0 +1,38 @@
+{
+  "name": "@realtalk/web",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .next"
+  },
+  "dependencies": {
+    "@realtalk/types": "workspace:*",
+    "@tanstack/react-query": "^5.91.2",
+    "axios": "^1.13.6",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "next": "^15.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "socket.io-client": "^4.8.3",
+    "tailwind-merge": "^2.3.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@realtalk/tsconfig": "workspace:*",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^9.0.0",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "rimraf": "^5.0.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.5.0"
+  }
+}

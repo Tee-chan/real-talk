@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  ci:
+    name: Lint, Typecheck & Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: realtalk
+          POSTGRES_PASSWORD: realtalk
+          POSTGRES_DB: realtalk_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://realtalk:realtalk@localhost:5432/realtalk_test
+
+      - name: Run migrations        
+        run: pnpm db:migrate
+        env:
+         DATABASE_URL: postgresql://realtalk:realtalk@localhost:5432/realtalk_test
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+        env:
+         DATABASE_URL: postgresql://realtalk:realtalk@localhost:5432/realtalk_test
+
+      - name: Test
+        run: pnpm test
+        env:
+          NODE_ENV: test
+          PORT: 4000
+          DATABASE_URL: postgresql://realtalk:realtalk@localhost:5432/realtalk_test
+          REDIS_URL: redis://localhost:6379
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_ACCESS_SECRET: test_access_secret_minimum_32_characters_long
+          JWT_REFRESH_SECRET: test_refresh_secret_minimum_32_characters_long
+          JWT_ACCESS_EXPIRES_IN: 15m
+          JWT_REFRESH_EXPIRES_IN: 7d
+          AI_PROVIDER: openai
+          ALLOWED_ORIGINS: http://localhost:3000
+

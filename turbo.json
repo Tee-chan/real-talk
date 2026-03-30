@@ -1,0 +1,54 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+  "NODE_ENV",
+  "PORT",
+  "DATABASE_URL",
+  "REDIS_URL",
+  "REDIS_HOST",
+  "REDIS_PORT",
+  "JWT_ACCESS_SECRET",
+  "JWT_REFRESH_SECRET",
+  "JWT_ACCESS_EXPIRES_IN",
+  "JWT_REFRESH_EXPIRES_IN",
+  "OPENAI_API_KEY",
+  "GEMINI_API_KEY",
+  "AI_PROVIDER",
+  "NEXT_PUBLIC_API_URL",
+  "NEXT_PUBLIC_WS_URL",
+  "ALLOWED_ORIGINS"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"],
+      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+   "lint": {
+     "dependsOn": []
+   },
+   "typecheck": {
+     "dependsOn": ["^build"]  
+    },
+    "test": {
+      "dependsOn": []
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    }
+  }
+}
